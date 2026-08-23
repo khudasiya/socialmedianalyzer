@@ -2,7 +2,23 @@
 
 > **Upload. Extract. Analyze. Improve Engagement.**
 
-**ContentLens AI** is a production-quality, full-stack web application designed for social media creators, growth marketers, and founders. It allows users to upload **PDF documents, PNG/JPG screenshots, scanned notes, or draft copy**, automatically extracts text using **Gemini Multimodal Vision AI** and PDF parsers, performs multi-faceted engagement analytics across 8 core metrics, and generates AI-enhanced post rewrites with live social platform previews.
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?logo=github)](https://github.com/khudasiya/socialmedianalyzer.git)
+[![React](https://img.shields.io/badge/React-19.0-61DAFB?logo=react)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-8.0-646CFF?logo=vite)](https://vitejs.dev/)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.0-38BDF8?logo=tailwindcss)](https://tailwindcss.com/)
+[![Express](https://img.shields.io/badge/Express-4.21-000000?logo=express)](https://expressjs.com/)
+[![Gemini AI](https://img.shields.io/badge/Google_Gemini-2.5/1.5_Vision-8E75B2?logo=googlegemini)](https://ai.google.dev/)
+
+**ContentLens AI** is a production-quality, full-stack web application designed for social media creators, growth marketers, and founders. It allows users to upload **PDF documents, PNG/JPG screenshots, scanned notes, or draft copy**, automatically extracts text using **Google Gemini Vision AI** and PDF parsers, performs multi-faceted engagement analytics across 8 core metrics, and generates AI-enhanced post rewrites with live social platform previews.
+
+---
+
+## 🎨 Visual Aesthetics & Design System
+
+- **Pastel Olive Green Palette**: Clean, minimal, sophisticated accent styling (`#588157`, `#3a5a40`, `#e9edc9`, `#a3b18a`) with **zero gradients**.
+- **Pure Crisp Background**: Pure white background (`#ffffff`) in light mode and dark obsidian (`#0c0d0b`) in dark mode.
+- **Minimalist SaaS Layout**: Spacious typography, clean borders (`border-stone-200/80`), and high readability.
+- **Working Dark/Light Mode**: Full custom dark variant toggle with theme persistence.
 
 ---
 
@@ -13,8 +29,8 @@
    - Real-time file validation, thumbnail preview, file size/type indicators, and clear error notifications.
    - Built-in **Sample Document Selector** for instant one-click testing without uploading files.
 
-2. **Automated Gemini AI Text Extraction**:
-   - **Gemini 1.5 Pro / Flash Vision AI**: Multimodal visual OCR for screenshots, scanned documents, and social post images.
+2. **Verbatim Gemini Vision OCR Extraction**:
+   - **Google Gemini 2.5 / 2.0 / 1.5 Vision AI**: Multimodal visual OCR pipeline with near-zero temperature for 100% verbatim text transcription.
    - **PDF Parser**: Extract text blocks while preserving paragraph breaks and structure.
    - **Interactive Rich Text Editor**: Edit extracted text, correct typos, view word/character/sentence counters, copy, clear, or re-extract text.
 
@@ -44,16 +60,28 @@
 
 ### Frontend
 - **Framework**: React 19 + Vite
-- **Styling**: Tailwind CSS (Glassmorphic design system, CSS variables, dark/light theme)
+- **Styling**: Tailwind CSS v4 (Pastel Olive Green minimal theme, selector dark mode)
 - **Icons**: Lucide React
-- **AI Vision OCR Engine**: Gemini 1.5 Pro / Flash Multimodal API
+- **AI Vision OCR Engine**: Gemini 2.5/2.0 Flash & 1.5 Pro Multimodal API
 
 ### Backend
 - **Runtime**: Node.js
 - **Server Framework**: Express.js REST API
 - **Middleware**: Multer (Memory storage file upload & size limit validation), CORS
-- **AI OCR & Copy Engine**: `@google/generative-ai` (Gemini 1.5 Pro Vision)
+- **AI OCR & Copy Engine**: `@google/generative-ai` (Gemini Vision AI)
 - **PDF Engine**: `pdf-parse`
+
+---
+
+## 📡 API Endpoint Reference
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/api/health` | Service health check & AI engine status |
+| `POST` | `/api/upload` | Upload PDF or image file and extract text |
+| `POST` | `/api/extract-text` | Raw text extraction endpoint |
+| `POST` | `/api/analyze` | Perform 8-point content engagement audit |
+| `POST` | `/api/improve` | Generate AI post rewrite (Viral, Professional, Casual, Persuasive) |
 
 ---
 
@@ -71,7 +99,7 @@ copyofsocialmedia/
 │   ├── services/
 │   │   ├── aiService.js         # Gemini AI Copy Generator
 │   │   ├── analysisService.js   # 8-Point NLP Heuristic Analyzer
-│   │   ├── ocrService.js        # Gemini Vision OCR Engine
+│   │   ├── ocrService.js        # Gemini 2.5/1.5 Vision OCR Engine
 │   │   └── pdfService.js        # PDF Text Parser Service
 │   ├── utils/
 │   │   └── responseFormatter.js
@@ -79,8 +107,8 @@ copyofsocialmedia/
 │   └── server.js
 ├── src/                         # React Vite Frontend SPA
 │   ├── components/
-│   │   ├── Header.tsx           # SaaS Navbar with Dark/Light Theme
-│   │   ├── Footer.tsx
+│   │   ├── Header.tsx           # SaaS Navbar with Dark/Light Theme Toggle
+│   │   ├── Footer.tsx           # Minimal Footer
 │   │   ├── FileUploader.tsx     # Drag & Drop Uploader Zone
 │   │   ├── SampleDocSelector.tsx# Demo Document Quick Start
 │   │   ├── TextEditor.tsx       # Extracted Text Editor & Stats
@@ -88,8 +116,8 @@ copyofsocialmedia/
 │   │   ├── AnalysisBreakdown.tsx # 8-Point Metric Cards
 │   │   ├── SuggestionsList.tsx  # Priority Recommendations
 │   │   ├── AIRewriteStudio.tsx  # Side-by-side Original vs Improved
-│   │   ├── PlatformPreviews.tsx # LinkedIn, X, IG, FB Simulator
-│   │   ├── LoadingState.tsx     # Contextual Step Loaders
+│   │   ├── PlatformPreviews.tsx # LinkedIn, X, IG, FB Feed Simulator
+│   │   ├── LoadingState.tsx     # Step Loaders
 │   │   └── NotificationToast.tsx
 │   ├── pages/
 │   │   ├── HomePage.tsx         # Landing Hero & Features Grid
@@ -103,7 +131,7 @@ copyofsocialmedia/
 │   │   └── sampleTexts.ts
 │   ├── App.css
 │   ├── App.tsx
-│   ├── index.css
+│   ├── index.css                # Custom Tailwind v4 & Pastel Olive Tokens
 │   └── main.tsx
 ├── .env.example
 ├── package.json
@@ -122,7 +150,7 @@ copyofsocialmedia/
 
 ### Step 1: Configure Environment Variables
 
-Create a `.env` file in the root and `server/` directory:
+Create a `.env` file in both the root directory and `server/` directory:
 
 ```env
 PORT=5000
@@ -146,3 +174,9 @@ npm start
 npm run dev
 ```
 *Vite Frontend will run on `http://localhost:5173`*
+
+---
+
+## 📝 License
+
+This project is open source and available under the [MIT License](LICENSE).
