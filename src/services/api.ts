@@ -6,6 +6,7 @@ import {
   improveContentLocal,
 } from './localAnalyzer';
 
+// Vercel Live Deployment API configuration
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 /**
@@ -42,7 +43,7 @@ export const uploadAndExtractFile = async (
       }
     }
   } catch (err) {
-    console.warn('Backend upload server offline or unreachable. Using client-side extraction:', err);
+    console.warn('Backend upload server offline or unreachable. Using client-side Gemini Vision OCR:', err);
   }
 
   // Client-Side Fallback Extraction
