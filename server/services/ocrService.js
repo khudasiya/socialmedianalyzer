@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 /**
- * High-Precision OCR & Text Extraction using Gemini Vision AI
+ * High-Precision OCR & Text Extraction using Gemma 4 Vision AI Engine
  * @param {Buffer} buffer 
  * @param {string} mimeType 
  * @returns {Promise<{ text: string, confidence: number, engine: string }>}
@@ -15,18 +15,23 @@ export const extractTextFromImage = async (buffer, mimeType = 'image/png') => {
 
   const genAI = new GoogleGenerativeAI(apiKey);
 
-  // Use official GA Gemini vision models: gemini-1.5-flash and gemini-1.5-pro
-  const modelsToTry = ['gemini-1.5-flash', 'gemini-1.5-pro'];
+  // Models supported by API Key AQ.Ab8RN...
+  const modelsToTry = [
+    'gemma-4-31b-it',
+    'gemma-4-26b-a4b-it',
+    'antigravity-preview-05-2026',
+    'gemini-1.5-flash',
+  ];
 
   let lastError = null;
 
   for (const modelName of modelsToTry) {
     try {
-      console.log(`[OCR Engine] Executing Gemini Vision OCR with model: ${modelName}...`);
+      console.log(`[OCR Engine] Executing Vision OCR with model: ${modelName}...`);
       const model = genAI.getGenerativeModel({
         model: modelName,
         generationConfig: {
-          temperature: 0.0, // 0.0 temperature for deterministic verbatim OCR
+          temperature: 0.0,
         },
       });
 
@@ -55,7 +60,7 @@ Rules for Transcription:
         return {
           text: extractedText,
           confidence: 99.9,
-          engine: `Gemini Vision AI (${modelName})`,
+          engine: `Vision AI (${modelName})`,
         };
       }
     } catch (err) {
@@ -64,5 +69,5 @@ Rules for Transcription:
     }
   }
 
-  throw new Error(`Gemini Multimodal Vision OCR extraction failed: ${lastError ? lastError.message : 'Unable to read image'}`);
+  throw new Error(`Vision OCR extraction failed: ${lastError ? lastError.message : 'Unable to read image'}`);
 };

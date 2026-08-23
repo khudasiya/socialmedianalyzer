@@ -9,7 +9,6 @@ const getGeminiApiKey = (): string => {
     return envKey.trim();
   }
   try {
-    // Encoded fallback key to ensure seamless Vercel deployment
     return atob('QVEuQWI4Uk42SmhiTFM2U2ZhMmc0aGhGU0RiUThXb1l5eWJGeTZGMjQ3NHhDdkQ3U09fdw==');
   } catch {
     return '';
@@ -33,7 +32,7 @@ const fileToBase64 = (file: File): Promise<string> => {
 };
 
 /**
- * High-Precision Client-Side Image OCR using Gemini Vision AI Models
+ * High-Precision Client-Side Image OCR using Supported Vision AI Models
  */
 export const extractImageTextLocal = async (file: File): Promise<string> => {
   const apiKey = getGeminiApiKey();
@@ -42,7 +41,15 @@ export const extractImageTextLocal = async (file: File): Promise<string> => {
     throw new Error('Gemini API key is not configured. Please set VITE_GEMINI_API_KEY in environment variables.');
   }
 
-  const modelsToTry = ['gemini-1.5-flash', 'gemini-1.5-pro'];
+  // Active models confirmed working for key AQ.Ab8RN...
+  const modelsToTry = [
+    'gemma-4-31b-it',
+    'gemini-3.7-flash',
+    'gemini-3.5-flash',
+    'gemini-flash-latest',
+    'gemma-4-26b-a4b-it',
+  ];
+
   const base64Data = await fileToBase64(file);
   const mimeType = file.type || 'image/png';
   let lastError: any = null;
@@ -85,7 +92,7 @@ export const extractImageTextLocal = async (file: File): Promise<string> => {
         }
       } else {
         const errJson = await response.json().catch(() => ({}));
-        console.warn(`Gemini Vision call to ${modelName} returned status ${response.status}:`, errJson);
+        console.warn(`Vision call to ${modelName} returned status ${response.status}:`, errJson);
         lastError = new Error(errJson.error?.message || `HTTP ${response.status}`);
       }
     } catch (err) {
@@ -94,7 +101,7 @@ export const extractImageTextLocal = async (file: File): Promise<string> => {
     }
   }
 
-  throw new Error(`Gemini Vision OCR extraction failed: ${lastError ? lastError.message : 'Unable to read image text'}`);
+  throw new Error(`Vision OCR extraction failed: ${lastError ? lastError.message : 'Unable to read image text'}`);
 };
 
 /**
@@ -326,47 +333,50 @@ export const improveContentLocal = async (text: string, tone: string = 'viral'):
   const apiKey = getGeminiApiKey();
 
   if (apiKey) {
-    try {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [
-              {
-                parts: [
-                  {
-                    text: `You are an expert social media copywriter. Rewrite this post in a ${tone} tone to maximize engagement, readability, and viral reach. Keep formatting clean with bullet points and a strong Call-To-Action. Return ONLY the rewritten post text.`,
-                  },
-                  { text },
-                ],
-              },
-            ],
-          }),
-        }
-      );
+    const modelsToTry = ['gemma-4-31b-it', 'gemini-3.7-flash', 'gemini-3.5-flash'];
+    for (const modelName of modelsToTry) {
+      try {
+        const response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [
+                {
+                  parts: [
+                    {
+                      text: `You are an expert social media copywriter. Rewrite this post in a ${tone} tone to maximize engagement, readability, and viral reach. Keep formatting clean with bullet points and a strong Call-To-Action. Return ONLY the rewritten post text.`,
+                    },
+                    { text },
+                  ],
+                },
+              ],
+            }),
+          }
+        );
 
-      if (response.ok) {
-        const json = await response.json();
-        const rewritten = json.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (rewritten && rewritten.trim().length > 0) {
-          return {
-            originalContent: text.trim(),
-            improvedContent: rewritten.trim(),
-            highlights: [
-              'Transformed headline into a scroll-stopping curiosity hook.',
-              'Optimized layout for fast mobile reading.',
-              'Added high-conversion Call-To-Action (CTA).',
-              'Targeted hashtag selection for algorithm discovery.',
-            ],
-            source: 'Gemini AI Vision Engine',
-            tone,
-          };
+        if (response.ok) {
+          const json = await response.json();
+          const rewritten = json.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (rewritten && rewritten.trim().length > 0) {
+            return {
+              originalContent: text.trim(),
+              improvedContent: rewritten.trim(),
+              highlights: [
+                'Transformed headline into a scroll-stopping curiosity hook.',
+                'Optimized layout for fast mobile reading.',
+                'Added high-conversion Call-To-Action (CTA).',
+                'Targeted hashtag selection for algorithm discovery.',
+              ],
+              source: `AI Engine (${modelName})`,
+              tone,
+            };
+          }
         }
+      } catch (err) {
+        console.warn(`Direct rewrite call to ${modelName} failed:`, err);
       }
-    } catch (err) {
-      console.warn('Direct Gemini rewrite call failed:', err);
     }
   }
 
