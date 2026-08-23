@@ -80,14 +80,14 @@ export const AnalyzePage: React.FC<AnalyzePageProps> = ({ initialStep = 'upload'
     setLoadingState({
       isLoading: true,
       stage: isImage ? 'ocr' : 'pdf',
-      message: isImage ? 'Scanning image with Tesseract OCR...' : 'Parsing PDF text structure...',
+      message: isImage ? 'Scanning image with Gemini Vision AI...' : 'Parsing PDF text structure...',
     });
 
     try {
       const result = await uploadAndExtractFile(fileInfo.rawFile);
       setExtractedText(result.text);
       setCurrentStep('extract');
-      setToast({ message: 'Text extracted successfully!', type: 'success' });
+      setToast({ message: 'Text extracted successfully via Gemini Vision!', type: 'success' });
     } catch (err: any) {
       setToast({ message: err.message || 'Failed to extract text from file.', type: 'error' });
     } finally {
@@ -125,7 +125,7 @@ export const AnalyzePage: React.FC<AnalyzePageProps> = ({ initialStep = 'upload'
     setLoadingState({
       isLoading: true,
       stage: 'improving',
-      message: `Generating ${tone} content rewrite...`,
+      message: `Generating ${tone} content rewrite with Gemini AI...`,
     });
 
     try {
@@ -151,7 +151,7 @@ export const AnalyzePage: React.FC<AnalyzePageProps> = ({ initialStep = 'upload'
   };
 
   return (
-    <div className="space-y-8 py-6">
+    <div className="space-y-6 py-6">
       
       {toast && (
         <NotificationToast
@@ -161,39 +161,40 @@ export const AnalyzePage: React.FC<AnalyzePageProps> = ({ initialStep = 'upload'
         />
       )}
 
-      <div className="bg-white dark:bg-slate-900 rounded-3xl p-4 border border-slate-200 dark:border-slate-800 shadow-md">
+      {/* Stepper Navbar */}
+      <div className="bg-white dark:bg-[#121411] rounded-2xl p-3 border border-stone-200/80 dark:border-stone-800 shadow-xs">
         <div className="flex items-center justify-between overflow-x-auto gap-2 pb-1 sm:pb-0 no-scrollbar">
           
           <button
             onClick={() => setCurrentStep('upload')}
-            className={`flex items-center space-x-2 px-4 py-2.5 rounded-2xl text-xs font-bold transition-all whitespace-nowrap ${
+            className={`flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-colors whitespace-nowrap ${
               currentStep === 'upload'
-                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
-                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                ? 'bg-[#588157] text-white dark:bg-[#a3b18a] dark:text-[#1b261b]'
+                : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800'
             }`}
           >
             <UploadCloud className="w-4 h-4" />
             <span>1. Upload File</span>
           </button>
 
-          <span className="text-slate-300 dark:text-slate-700 font-bold">→</span>
+          <span className="text-stone-300 dark:text-stone-700 font-bold">→</span>
 
           <button
             onClick={() => {
               if (extractedText || fileInfo) setCurrentStep('extract');
             }}
             disabled={!extractedText && !fileInfo}
-            className={`flex items-center space-x-2 px-4 py-2.5 rounded-2xl text-xs font-bold transition-all whitespace-nowrap disabled:opacity-40 ${
+            className={`flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-colors whitespace-nowrap disabled:opacity-40 ${
               currentStep === 'extract'
-                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
-                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                ? 'bg-[#588157] text-white dark:bg-[#a3b18a] dark:text-[#1b261b]'
+                : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800'
             }`}
           >
             <FileText className="w-4 h-4" />
             <span>2. Text Editor</span>
           </button>
 
-          <span className="text-slate-300 dark:text-slate-700 font-bold">→</span>
+          <span className="text-stone-300 dark:text-stone-700 font-bold">→</span>
 
           <button
             onClick={() => {
@@ -201,17 +202,17 @@ export const AnalyzePage: React.FC<AnalyzePageProps> = ({ initialStep = 'upload'
               else if (extractedText) handleRunAnalysis();
             }}
             disabled={!extractedText}
-            className={`flex items-center space-x-2 px-4 py-2.5 rounded-2xl text-xs font-bold transition-all whitespace-nowrap disabled:opacity-40 ${
+            className={`flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-colors whitespace-nowrap disabled:opacity-40 ${
               currentStep === 'analyze'
-                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
-                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                ? 'bg-[#588157] text-white dark:bg-[#a3b18a] dark:text-[#1b261b]'
+                : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800'
             }`}
           >
             <BarChart3 className="w-4 h-4" />
             <span>3. Engagement Audit</span>
           </button>
 
-          <span className="text-slate-300 dark:text-slate-700 font-bold">→</span>
+          <span className="text-stone-300 dark:text-stone-700 font-bold">→</span>
 
           <button
             onClick={() => {
@@ -219,10 +220,10 @@ export const AnalyzePage: React.FC<AnalyzePageProps> = ({ initialStep = 'upload'
               else if (extractedText) handleRunImprovement('viral');
             }}
             disabled={!extractedText}
-            className={`flex items-center space-x-2 px-4 py-2.5 rounded-2xl text-xs font-bold transition-all whitespace-nowrap disabled:opacity-40 ${
+            className={`flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-colors whitespace-nowrap disabled:opacity-40 ${
               currentStep === 'improve'
-                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
-                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                ? 'bg-[#588157] text-white dark:bg-[#a3b18a] dark:text-[#1b261b]'
+                : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800'
             }`}
           >
             <Sparkles className="w-4 h-4" />
@@ -259,22 +260,22 @@ export const AnalyzePage: React.FC<AnalyzePageProps> = ({ initialStep = 'upload'
           )}
 
           {currentStep === 'analyze' && analysisResult && (
-            <div className="space-y-8 animate-fadeIn">
+            <div className="space-y-6 animate-fadeIn">
               <EngagementScoreCard result={analysisResult} />
 
-              <div className="bg-gradient-to-r from-indigo-900 to-purple-950 text-white rounded-3xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
+              <div className="bg-[#3a5a40] dark:bg-[#1b261b] text-white rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4 border border-[#588157]/40 shadow-xs">
                 <div>
-                  <h4 className="text-base font-bold flex items-center gap-2">
-                    <Sparkles className="w-4.5 h-4.5 text-amber-400" />
-                    Ready to generate viral post variations?
+                  <h4 className="text-sm font-bold flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-[#e9edc9]" />
+                    Ready to generate viral post variations with Gemini AI?
                   </h4>
-                  <p className="text-xs text-indigo-200/80 mt-0.5">
+                  <p className="text-xs text-[#ccd5ae] mt-0.5">
                     Transform your post with enhanced hooks, CTAs, and formatting.
                   </p>
                 </div>
                 <button
                   onClick={() => handleRunImprovement('viral')}
-                  className="px-6 py-3 rounded-2xl bg-white text-indigo-950 font-extrabold text-xs hover:bg-slate-100 transition-all flex items-center space-x-2 shadow-lg flex-shrink-0"
+                  className="px-5 py-2.5 rounded-xl bg-[#e9edc9] text-[#3a5a40] font-bold text-xs hover:bg-[#ccd5ae] transition-colors flex items-center space-x-1.5 flex-shrink-0"
                 >
                   <span>Improve Content Studio</span>
                   <ArrowRight className="w-4 h-4" />
@@ -287,7 +288,7 @@ export const AnalyzePage: React.FC<AnalyzePageProps> = ({ initialStep = 'upload'
           )}
 
           {currentStep === 'improve' && (
-            <div className="space-y-8 animate-fadeIn">
+            <div className="space-y-6 animate-fadeIn">
               <AIRewriteStudio
                 improvedData={improvedData}
                 originalText={extractedText}

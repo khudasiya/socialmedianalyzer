@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Copy, Check, Download, Edit3, CheckCircle2 } from 'lucide-react';
+import { Copy, Check, Download, Edit3, CheckCircle2, Sparkles } from 'lucide-react';
 import type { ImprovedContentData, TonePreset } from '../types';
 
 interface AIRewriteStudioProps {
@@ -56,18 +56,19 @@ export const AIRewriteStudio: React.FC<AIRewriteStudioProps> = ({
   return (
     <div className="space-y-6">
       {/* Header Bar */}
-      <div className="bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-2xl p-5 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-[#3a5a40] dark:bg-[#1b261b] text-white rounded-2xl p-5 shadow-xs border border-[#588157]/40 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-extrabold tracking-tight">
-            AI Content Improvement Engine
+          <h2 className="text-lg font-extrabold tracking-tight flex items-center gap-2">
+            <Sparkles className="w-4.5 h-4.5 text-[#e9edc9]" />
+            <span>AI Content Improvement Engine</span>
           </h2>
-          <p className="text-xs text-zinc-400 dark:text-zinc-600 mt-0.5">
+          <p className="text-xs text-[#ccd5ae] mt-0.5">
             Optimized opening hook, structure, CTA, and hashtag density while preserving core message.
           </p>
         </div>
 
         {/* Tone Selector Pills */}
-        <div className="flex items-center space-x-1 flex-wrap bg-zinc-800 dark:bg-zinc-200 p-1 rounded-xl">
+        <div className="flex items-center space-x-1 flex-wrap bg-[#344e41] dark:bg-[#0c0d0b] p-1 rounded-xl">
           {(
             [
               { id: 'viral', label: 'Viral' },
@@ -82,8 +83,8 @@ export const AIRewriteStudio: React.FC<AIRewriteStudioProps> = ({
               disabled={isLoading}
               className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors ${
                 activeTone === tone.id
-                  ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white font-bold'
-                  : 'text-zinc-300 dark:text-zinc-700 hover:text-white dark:hover:text-zinc-900'
+                  ? 'bg-[#e9edc9] text-[#3a5a40] font-bold'
+                  : 'text-stone-300 dark:text-stone-400 hover:text-white dark:hover:text-stone-200'
               }`}
             >
               {tone.label}
@@ -95,25 +96,25 @@ export const AIRewriteStudio: React.FC<AIRewriteStudioProps> = ({
       {/* Side-by-Side Comparison Container */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Left Box: Original Content */}
-        <div className="bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-zinc-200 dark:border-zinc-800 space-y-3">
-          <div className="flex items-center justify-between pb-2 border-b border-zinc-100 dark:border-zinc-800">
-            <span className="text-xs font-bold uppercase tracking-wider text-zinc-500">
+        <div className="bg-white dark:bg-[#121411] rounded-2xl p-5 border border-stone-200 dark:border-stone-800 space-y-3">
+          <div className="flex items-center justify-between pb-2 border-b border-stone-100 dark:border-stone-800">
+            <span className="text-xs font-bold uppercase tracking-wider text-stone-500">
               Original Content
             </span>
-            <span className="text-[11px] text-zinc-400">
+            <span className="text-[11px] text-stone-400">
               {originalText.length} chars
             </span>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-zinc-50 dark:bg-zinc-950 border border-zinc-200/80 dark:border-zinc-800 text-xs text-zinc-700 dark:text-zinc-300 whitespace-pre-wrap leading-relaxed min-h-[200px]">
+          <div className="p-3.5 rounded-xl bg-stone-50 dark:bg-[#0c0d0b] border border-stone-200/80 dark:border-stone-800 text-xs text-stone-700 dark:text-stone-300 whitespace-pre-wrap leading-relaxed min-h-[200px]">
             {originalText || 'No text provided'}
           </div>
         </div>
 
         {/* Right Box: Improved Version */}
-        <div className="bg-white dark:bg-zinc-900 rounded-2xl p-5 border-2 border-zinc-900 dark:border-zinc-100 space-y-3">
-          <div className="flex items-center justify-between pb-2 border-b border-zinc-100 dark:border-zinc-800 flex-wrap gap-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-zinc-900 dark:text-zinc-100">
+        <div className="bg-white dark:bg-[#121411] rounded-2xl p-5 border-2 border-[#588157] dark:border-[#a3b18a] space-y-3">
+          <div className="flex items-center justify-between pb-2 border-b border-stone-100 dark:border-stone-800 flex-wrap gap-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#3a5a40] dark:text-[#a3b18a]">
               Improved Version
             </span>
 
@@ -122,8 +123,8 @@ export const AIRewriteStudio: React.FC<AIRewriteStudioProps> = ({
                 onClick={() => setIsEditing(!isEditing)}
                 className={`px-2.5 py-1 rounded-lg border text-xs font-semibold transition-colors flex items-center space-x-1 ${
                   isEditing
-                    ? 'bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 border-zinc-900 dark:border-zinc-100'
-                    : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700'
+                    ? 'bg-[#588157] text-white border-[#588157]'
+                    : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 border-stone-200 dark:border-stone-700'
                 }`}
               >
                 <Edit3 className="w-3 h-3" />
@@ -132,7 +133,7 @@ export const AIRewriteStudio: React.FC<AIRewriteStudioProps> = ({
 
               <button
                 onClick={handleCopy}
-                className="px-2.5 py-1 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 text-xs font-semibold transition-colors flex items-center space-x-1"
+                className="px-2.5 py-1 rounded-lg bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 text-xs font-semibold transition-colors flex items-center space-x-1"
               >
                 {copied ? (
                   <>
@@ -149,7 +150,7 @@ export const AIRewriteStudio: React.FC<AIRewriteStudioProps> = ({
 
               <button
                 onClick={handleDownload}
-                className="px-2.5 py-1 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 text-xs font-semibold transition-colors flex items-center space-x-1"
+                className="px-2.5 py-1 rounded-lg bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 text-xs font-semibold transition-colors flex items-center space-x-1"
               >
                 <Download className="w-3 h-3" />
                 <span>TXT</span>
@@ -162,17 +163,17 @@ export const AIRewriteStudio: React.FC<AIRewriteStudioProps> = ({
               value={editedText}
               onChange={(e) => setEditedText(e.target.value)}
               rows={9}
-              className="w-full p-3.5 rounded-xl bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-xs text-zinc-900 dark:text-zinc-100 leading-relaxed focus:outline-none"
+              className="w-full p-3.5 rounded-xl bg-stone-50 dark:bg-[#0c0d0b] border border-stone-300 dark:border-stone-700 text-xs text-stone-900 dark:text-stone-100 leading-relaxed focus:outline-none"
             />
           ) : (
-            <div className="p-3.5 rounded-xl bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-xs text-zinc-900 dark:text-zinc-100 whitespace-pre-wrap leading-relaxed min-h-[200px]">
+            <div className="p-3.5 rounded-xl bg-[#e9edc9]/20 dark:bg-[#344e41]/20 border border-[#ccd5ae]/60 dark:border-[#588157]/40 text-xs text-stone-900 dark:text-stone-100 whitespace-pre-wrap leading-relaxed min-h-[200px]">
               {currentImprovedText}
             </div>
           )}
 
           {improvedData?.highlights && improvedData.highlights.length > 0 && (
-            <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800">
-              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-[11px] text-zinc-500">
+            <div className="pt-2 border-t border-stone-100 dark:border-stone-800">
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-[11px] text-stone-500">
                 {improvedData.highlights.map((item, idx) => (
                   <li key={idx} className="flex items-center space-x-1">
                     <CheckCircle2 className="w-3 h-3 text-emerald-500 flex-shrink-0" />

@@ -40,22 +40,23 @@ export const TextEditor: React.FC<TextEditorProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       
-      <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 flex items-center justify-between shadow-sm flex-wrap gap-3">
-        <div className="flex items-center space-x-2 sm:space-x-4 text-xs font-bold">
+      {/* Workflow Stepper status */}
+      <div className="bg-white dark:bg-[#121411] rounded-xl p-3.5 border border-stone-200/80 dark:border-stone-800 flex items-center justify-between shadow-xs flex-wrap gap-2">
+        <div className="flex items-center space-x-3 text-xs font-semibold">
           <div className="flex items-center space-x-1 text-emerald-600 dark:text-emerald-400">
             <CheckCircle className="w-4 h-4" />
             <span>Upload Complete</span>
           </div>
-          <span className="text-slate-300 dark:text-slate-700">→</span>
-          <div className="flex items-center space-x-1 text-indigo-600 dark:text-indigo-400">
+          <span className="text-stone-300 dark:text-stone-700 font-bold">→</span>
+          <div className="flex items-center space-x-1 text-[#588157] dark:text-[#a3b18a]">
             <CheckCircle className="w-4 h-4" />
             <span>Text Extracted</span>
           </div>
-          <span className="text-slate-300 dark:text-slate-700">→</span>
-          <div className="flex items-center space-x-1 text-slate-400 dark:text-slate-500">
-            <div className="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center text-[10px]">
+          <span className="text-stone-300 dark:text-stone-700 font-bold">→</span>
+          <div className="flex items-center space-x-1 text-stone-400">
+            <div className="w-4 h-4 rounded-full border border-stone-300 dark:border-stone-700 flex items-center justify-center text-[10px]">
               3
             </div>
             <span>Ready for Analysis</span>
@@ -63,29 +64,29 @@ export const TextEditor: React.FC<TextEditorProps> = ({
         </div>
 
         {fileName && (
-          <div className="text-xs font-semibold px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 truncate max-w-[200px]">
+          <div className="text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 border border-stone-200 dark:border-stone-700 truncate max-w-[180px]">
             📄 {fileName}
           </div>
         )}
       </div>
 
-      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-lg overflow-hidden">
+      <div className="bg-white dark:bg-[#121411] rounded-2xl border border-stone-200/80 dark:border-stone-800 shadow-xs overflow-hidden">
         
-        <div className="px-6 py-4 bg-slate-50/80 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between flex-wrap gap-3">
+        <div className="px-5 py-3 bg-stone-50/80 dark:bg-stone-900/60 border-b border-stone-200/80 dark:border-stone-800 flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center space-x-2">
-            <Edit3 className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">
+            <Edit3 className="w-4 h-4 text-[#588157] dark:text-[#a3b18a]" />
+            <h3 className="text-xs font-bold text-stone-900 dark:text-stone-100 uppercase tracking-wider">
               Extracted Social Content
             </h3>
-            <span className="text-xs text-slate-400 dark:text-slate-500 hidden sm:inline">
-              (Editable - Correct OCR errors if any)
+            <span className="text-[11px] text-stone-400 hidden sm:inline">
+              (Editable)
             </span>
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1.5">
             <button
               onClick={handleCopy}
-              className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 text-xs font-semibold transition-colors flex items-center space-x-1.5 shadow-sm"
+              className="px-2.5 py-1 rounded-lg bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-700 text-xs font-medium transition-colors flex items-center space-x-1"
               title="Copy text to clipboard"
             >
               {copied ? (
@@ -103,16 +104,16 @@ export const TextEditor: React.FC<TextEditorProps> = ({
 
             <button
               onClick={() => onTextChange('')}
-              className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:text-rose-600 dark:hover:text-rose-400 text-xs font-semibold transition-colors flex items-center space-x-1.5 shadow-sm"
+              className="px-2.5 py-1 rounded-lg bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-xs font-medium transition-colors flex items-center space-x-1"
               title="Clear text content"
             >
-              <Trash2 className="w-3.5 h-3.5" />
+              <Trash2 className="w-3.5 h-3.5 text-rose-500" />
               <span>Clear</span>
             </button>
 
             <button
               onClick={onReset}
-              className="px-3 py-1.5 rounded-xl bg-slate-200/70 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 text-xs font-semibold transition-colors flex items-center space-x-1.5"
+              className="px-2.5 py-1 rounded-lg bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700 text-xs font-medium transition-colors flex items-center space-x-1"
               title="Upload new file"
             >
               <RefreshCw className="w-3.5 h-3.5" />
@@ -121,48 +122,43 @@ export const TextEditor: React.FC<TextEditorProps> = ({
           </div>
         </div>
 
-        <div className="p-6">
+        <div className="p-5">
           <textarea
             value={text}
             onChange={(e) => onTextChange(e.target.value)}
-            rows={10}
-            placeholder="Extracted text will appear here. You can also paste or edit your social media post text directly..."
-            className="w-full p-4 rounded-2xl bg-slate-50/50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 font-sans text-sm leading-relaxed resize-y"
+            rows={9}
+            placeholder="Extracted text will appear here. You can edit or paste your text directly..."
+            className="w-full p-3.5 rounded-xl bg-stone-50 dark:bg-[#0c0d0b] border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 placeholder-stone-400 focus:outline-none focus:ring-1 focus:ring-[#588157] font-sans text-xs leading-relaxed resize-y"
           />
 
-          <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 flex-wrap gap-2">
-            <div className="flex items-center space-x-4">
-              <span>
-                <strong className="text-slate-800 dark:text-slate-200 font-bold">{wordCount}</strong> Words
-              </span>
+          <div className="mt-3 pt-3 border-t border-stone-100 dark:border-stone-800/80 flex items-center justify-between text-xs text-stone-500 flex-wrap gap-2">
+            <div className="flex items-center space-x-3 text-[11px]">
+              <span><strong className="text-stone-900 dark:text-stone-100 font-bold">{wordCount}</strong> Words</span>
               <span>•</span>
-              <span>
-                <strong className="text-slate-800 dark:text-slate-200 font-bold">{charCount}</strong> Characters
-              </span>
+              <span><strong className="text-stone-900 dark:text-stone-100 font-bold">{charCount}</strong> Characters</span>
               <span>•</span>
-              <span>
-                <strong className="text-slate-800 dark:text-slate-200 font-bold">{sentenceCount}</strong> Sentences
-              </span>
+              <span><strong className="text-stone-900 dark:text-stone-100 font-bold">{sentenceCount}</strong> Sentences</span>
             </div>
 
             {wordCount < 10 && wordCount > 0 && (
               <span className="text-amber-600 dark:text-amber-400 font-medium text-[11px]">
-                ⚠️ Very brief text. Add more content for deeper analysis.
+                ⚠️ Brief text. Add more content for deeper analysis.
               </span>
             )}
           </div>
         </div>
 
-        <div className="p-6 bg-slate-50 dark:bg-slate-800/40 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between flex-wrap gap-4">
-          <div className="flex items-center space-x-2 text-xs text-slate-500 dark:text-slate-400">
-            <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+        {/* Bottom Action Bar */}
+        <div className="p-4 bg-stone-50/80 dark:bg-stone-900/40 border-t border-stone-200/80 dark:border-stone-800 flex items-center justify-between flex-wrap gap-3">
+          <div className="flex items-center space-x-1.5 text-xs text-stone-500">
+            <Sparkles className="w-3.5 h-3.5 text-[#588157] dark:text-[#a3b18a]" />
             <span>Ready to evaluate engagement, hooks, tone, & call-to-actions</span>
           </div>
 
           <button
             onClick={onAnalyze}
             disabled={isLoading || !text.trim()}
-            className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 text-white font-bold text-sm shadow-xl shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center space-x-2.5 disabled:opacity-40 disabled:hover:scale-100"
+            className="px-5 py-2.5 rounded-xl bg-[#588157] hover:bg-[#3a5a40] dark:bg-[#a3b18a] dark:text-[#1b261b] dark:hover:bg-[#ccd5ae] text-white font-bold text-xs shadow-xs transition-colors flex items-center space-x-1.5 disabled:opacity-40"
           >
             <span>Analyze Content Now</span>
             <ArrowRight className="w-4 h-4" />
