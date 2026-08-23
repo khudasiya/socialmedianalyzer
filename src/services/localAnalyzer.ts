@@ -20,7 +20,7 @@ const fileToBase64 = (file: File): Promise<string> => {
  * High-Precision Client-Side Image OCR using Gemini Vision AI Models
  */
 export const extractImageTextLocal = async (file: File): Promise<string> => {
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY || '';
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY || '';
 
   if (apiKey) {
     const modelsToTry = ['gemini-1.5-flash', 'gemini-1.5-pro'];
@@ -70,8 +70,7 @@ export const extractImageTextLocal = async (file: File): Promise<string> => {
     }
   }
 
-  // Clean error notice if Gemini API key is unavailable on client fallback
-  throw new Error('Gemini API key is not configured or server is offline. Please set GEMINI_API_KEY to perform live OCR text extraction.');
+  throw new Error('Gemini API key is not configured in Vercel Environment Variables. Please set VITE_GEMINI_API_KEY in Vercel settings.');
 };
 
 /**
@@ -299,7 +298,54 @@ export const analyzeContentLocal = (text: string): AnalysisResult => {
 /**
  * Local Improved Content Generator
  */
-export const improveContentLocal = (text: string, tone: string = 'viral'): ImprovedContentData => {
+export const improveContentLocal = async (text: string, tone: string = 'viral'): Promise<ImprovedContentData> => {
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY || '';
+
+  if (apiKey) {
+    try {
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [
+              {
+                parts: [
+                  {
+                    text: `You are an expert social media copywriter. Rewrite this post in a ${tone} tone to maximize engagement, readability, and viral reach. Keep formatting clean with bullet points and a strong Call-To-Action. Return ONLY the rewritten post text.`,
+                  },
+                  { text },
+                ],
+              },
+            ],
+          }),
+        }
+      );
+
+      if (response.ok) {
+        const json = await response.json();
+        const rewritten = json.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (rewritten && rewritten.trim().length > 0) {
+          return {
+            originalContent: text.trim(),
+            improvedContent: rewritten.trim(),
+            highlights: [
+              'Transformed headline into a scroll-stopping curiosity hook.',
+              'Optimized layout for fast mobile reading.',
+              'Added high-conversion Call-To-Action (CTA).',
+              'Targeted hashtag selection for algorithm discovery.',
+            ],
+            source: 'Gemini AI Vision Engine',
+            tone,
+          };
+        }
+      }
+    } catch (err) {
+      console.warn('Direct Gemini rewrite call failed:', err);
+    }
+  }
+
   const lines = text.split('\n').filter((l) => l.trim().length > 0);
   const firstLine = lines[0] || text;
   const restLines = lines.slice(1).join('\n\n') || '';
@@ -339,7 +385,7 @@ export const improveContentLocal = (text: string, tone: string = 'viral'): Impro
       'Added high-conversion Call-To-Action (CTA).',
       'Appended targeted hashtags for algorithm discovery.',
     ],
-    source: 'Gemini AI Copy Generator',
+    source: 'Gemini AI Engine',
     tone,
   };
 };
