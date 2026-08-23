@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 /**
- * High-Precision OCR & Text Extraction using Gemma 4 Vision AI Engine
+ * High-Precision OCR & Text Extraction using Google Vision AI Engine
  * @param {Buffer} buffer 
  * @param {string} mimeType 
  * @returns {Promise<{ text: string, confidence: number, engine: string }>}
@@ -15,12 +15,12 @@ export const extractTextFromImage = async (buffer, mimeType = 'image/png') => {
 
   const genAI = new GoogleGenerativeAI(apiKey);
 
-  // Models supported by API Key AQ.Ab8RN...
+  // Active models supported by Google API
   const modelsToTry = [
+    'gemini-3.7-flash',
+    'gemini-3.6-flash',
+    'gemini-3.5-flash',
     'gemma-4-31b-it',
-    'gemma-4-26b-a4b-it',
-    'antigravity-preview-05-2026',
-    'gemini-1.5-flash',
   ];
 
   let lastError = null;

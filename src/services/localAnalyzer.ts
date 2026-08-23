@@ -41,13 +41,12 @@ export const extractImageTextLocal = async (file: File): Promise<string> => {
     throw new Error('Gemini API key is not configured. Please set VITE_GEMINI_API_KEY in environment variables.');
   }
 
-  // Active models confirmed working for key AQ.Ab8RN...
+  // Active production models for Google API
   const modelsToTry = [
-    'gemma-4-31b-it',
     'gemini-3.7-flash',
+    'gemini-3.6-flash',
     'gemini-3.5-flash',
-    'gemini-flash-latest',
-    'gemma-4-26b-a4b-it',
+    'gemma-4-31b-it',
   ];
 
   const base64Data = await fileToBase64(file);
@@ -333,7 +332,7 @@ export const improveContentLocal = async (text: string, tone: string = 'viral'):
   const apiKey = getGeminiApiKey();
 
   if (apiKey) {
-    const modelsToTry = ['gemma-4-31b-it', 'gemini-3.7-flash', 'gemini-3.5-flash'];
+    const modelsToTry = ['gemini-3.7-flash', 'gemini-3.6-flash', 'gemini-3.5-flash', 'gemma-4-31b-it'];
     for (const modelName of modelsToTry) {
       try {
         const response = await fetch(
