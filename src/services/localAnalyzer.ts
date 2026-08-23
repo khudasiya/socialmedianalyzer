@@ -17,13 +17,13 @@ const fileToBase64 = (file: File): Promise<string> => {
 };
 
 /**
- * Ultra-Precision Client-Side Image OCR using Gemini Vision Models
+ * High-Precision Client-Side Image OCR using Gemini Vision AI Models
  */
 export const extractImageTextLocal = async (file: File): Promise<string> => {
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY || '';
 
   if (apiKey) {
-    const modelsToTry = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-pro', 'gemini-1.5-flash'];
+    const modelsToTry = ['gemini-1.5-flash', 'gemini-1.5-pro'];
     const base64Data = await fileToBase64(file);
     const mimeType = file.type || 'image/png';
 
@@ -39,7 +39,7 @@ export const extractImageTextLocal = async (file: File): Promise<string> => {
                 {
                   parts: [
                     {
-                      text: 'Transcribe ALL readable text from this image with 100% verbatim accuracy. Do not skip any text. Do not paraphrase. Output ONLY raw transcribed text.',
+                      text: 'Transcribe ALL readable text from this image with 100% verbatim accuracy. Read every headline, title, subtitle, date, tape banner, and brand name word-for-word. Output ONLY raw text.',
                     },
                     {
                       inline_data: {
@@ -70,7 +70,8 @@ export const extractImageTextLocal = async (file: File): Promise<string> => {
     }
   }
 
-  return `Extracted text from ${file.name}:\n\nAre you wasting hours on social media without seeing growth? 🚀\n\nHere are 3 rules for viral content:\n• Start with a scroll-stopping hook\n• Keep sentence structure clean & punchy\n• Always include a high-converting CTA\n\nComment below with your #1 growth strategy! 👇\n\n#GrowthHacks #ContentStrategy #DigitalMarketing`;
+  // Clean error notice if Gemini API key is unavailable on client fallback
+  throw new Error('Gemini API key is not configured or server is offline. Please set GEMINI_API_KEY to perform live OCR text extraction.');
 };
 
 /**
@@ -90,10 +91,10 @@ export const extractPdfTextLocal = async (file: File): Promise<string> => {
           .filter((t) => /[a-zA-Z0-9\s.,!?'"-]{4,}/.test(t))
           .join(' ');
 
-        if (extracted && extracted.length > 20) {
+        if (extracted && extracted.length > 10) {
           resolve(extracted);
         } else {
-          resolve(`Extracted text from PDF document (${file.name}):\n\nSocial Media Engagement & Content Strategy Guide.\n\nKey finding: Posts with a clear curiosity hook and explicit Call-to-Action generate 3.4x higher response rates.`);
+          throw new Error(`Unable to extract text from PDF (${file.name}). Please ensure the PDF contains selectable text.`);
         }
       } catch (err) {
         reject(err);
@@ -338,7 +339,7 @@ export const improveContentLocal = (text: string, tone: string = 'viral'): Impro
       'Added high-conversion Call-To-Action (CTA).',
       'Appended targeted hashtags for algorithm discovery.',
     ],
-    source: 'Gemini 2.5 Flash Copy Generator',
+    source: 'Gemini AI Copy Generator',
     tone,
   };
 };

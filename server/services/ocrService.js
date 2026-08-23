@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 /**
- * Ultra-accurate OCR & Document Text Extraction using Google Gemini 2.5/2.0/1.5 Vision Models
+ * High-Precision OCR & Text Extraction using Gemini Vision AI
  * @param {Buffer} buffer 
  * @param {string} mimeType 
  * @returns {Promise<{ text: string, confidence: number, engine: string }>}
@@ -15,23 +15,18 @@ export const extractTextFromImage = async (buffer, mimeType = 'image/png') => {
 
   const genAI = new GoogleGenerativeAI(apiKey);
 
-  // List of top Gemini vision models ordered by OCR capability
-  const modelsToTry = [
-    'gemini-2.5-flash',
-    'gemini-2.0-flash',
-    'gemini-1.5-pro',
-    'gemini-1.5-flash',
-  ];
+  // Use official GA Gemini vision models: gemini-1.5-flash and gemini-1.5-pro
+  const modelsToTry = ['gemini-1.5-flash', 'gemini-1.5-pro'];
 
   let lastError = null;
 
   for (const modelName of modelsToTry) {
     try {
-      console.log(`[OCR Engine] Attempting OCR text extraction with model: ${modelName}...`);
+      console.log(`[OCR Engine] Executing Gemini Vision OCR with model: ${modelName}...`);
       const model = genAI.getGenerativeModel({
         model: modelName,
         generationConfig: {
-          temperature: 0.0, // 0.0 temperature for strict deterministic verbatim OCR
+          temperature: 0.0, // 0.0 temperature for deterministic verbatim OCR
         },
       });
 
@@ -42,15 +37,14 @@ export const extractTextFromImage = async (buffer, mimeType = 'image/png') => {
         },
       };
 
-      const prompt = `You are a world-class Optical Character Recognition (OCR) engine.
-Your task is to transcribe ALL text visible in this image with 100% verbatim precision.
+      const prompt = `You are a high-precision Optical Character Recognition (OCR) engine.
+Transcribe ALL readable text visible in this image or poster with 100% verbatim accuracy.
 
-Transcribe:
-- Every line of text, headline, subheadline, bullet point, paragraph, and caption.
-- Every social media handle, timestamp, comment count, and hashtag.
-- Retain exact spelling, capitalization, line breaks, and paragraph structure.
-- Do NOT skip, summarize, paraphrase, or edit any words.
-- Output ONLY the raw extracted text. Do NOT wrap in conversational intro phrases.`;
+Rules for Transcription:
+1. Read every headline, title, subtitle, date, tape banner text, brand name, and caption word-for-word.
+2. Preserve exact spelling, capitalization, line breaks, and paragraph structure.
+3. Do NOT skip any words, numbers, or dates (e.g. dates like 27.08.2026, text on green banners, brand names like MADVERSE).
+4. Do NOT paraphrase, summarize, or add intro commentary. Return ONLY the raw transcribed text.`;
 
       const result = await model.generateContent([prompt, imagePart]);
       const response = await result.response;
@@ -65,10 +59,10 @@ Transcribe:
         };
       }
     } catch (err) {
-      console.warn(`[OCR Engine] ${modelName} returned error:`, err.message);
+      console.warn(`[OCR Engine] Model ${modelName} returned error:`, err.message);
       lastError = err;
     }
   }
 
-  throw new Error(`Gemini Multimodal OCR failed: ${lastError ? lastError.message : 'No readable text extracted'}`);
+  throw new Error(`Gemini Multimodal Vision OCR extraction failed: ${lastError ? lastError.message : 'Unable to read image'}`);
 };
