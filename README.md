@@ -2,12 +2,18 @@
 
 > **Upload. Extract. Analyze. Improve Engagement.**
 
-[![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?logo=github)](https://github.com/khudasiya/socialmedianalyzer.git)
+[![Live Demo](https://img.shields.io/badge/Vercel-Live_Demo-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://socialmedianalyzer.vercel.app/)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github)](https://github.com/khudasiya/socialmedianalyzer.git)
+
 [![React](https://img.shields.io/badge/React-19.0-61DAFB?logo=react)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-8.0-646CFF?logo=vite)](https://vitejs.dev/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.0-38BDF8?logo=tailwindcss)](https://tailwindcss.com/)
 [![Express](https://img.shields.io/badge/Express-4.21-000000?logo=express)](https://expressjs.com/)
 [![Gemini AI](https://img.shields.io/badge/Google_Gemini-2.5/1.5_Vision-8E75B2?logo=googlegemini)](https://ai.google.dev/)
+
+🔗 **Live Website Application**: [https://socialmedianalyzer.vercel.app/](https://socialmedianalyzer.vercel.app/)
+
+---
 
 **ContentLens AI** is a production-quality, full-stack web application designed for social media creators, growth marketers, and founders. It allows users to upload **PDF documents, PNG/JPG screenshots, scanned notes, or draft copy**, automatically extracts text using **Google Gemini Vision AI** and PDF parsers, performs multi-faceted engagement analytics across 8 core metrics, and generates AI-enhanced post rewrites with live social platform previews.
 
