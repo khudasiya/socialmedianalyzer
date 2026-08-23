@@ -32,6 +32,21 @@ const fileToBase64 = (file: File): Promise<string> => {
 };
 
 /**
+ * Clean PDF binary stream artifacts, ASCII85 noise, and C2PA signature blocks
+ */
+const cleanPdfExtractedText = (text: string): string => {
+  return text
+    .replace(/endstream[\s\S]*?endobj/gi, '')
+    .replace(/\/Filter\s*\[[\s\S]*?\]/gi, '')
+    .replace(/c2pa[\s\S]*?application\/c2pa/gi, '')
+    .replace(/[\w.-]+\s*D:\d{14}[+|-]\d{2}'\d{2}'/gi, '')
+    .replace(/[^\x20-\x7E\n\r\t]/g, ' ')
+    .replace(/\s{2,}/g, ' ')
+    .replace(/\n\s*\n/g, '\n\n')
+    .trim();
+};
+
+/**
  * High-Precision Client-Side Image OCR using Supported Vision AI Models
  */
 export const extractImageTextLocal = async (file: File): Promise<string> => {
@@ -41,7 +56,6 @@ export const extractImageTextLocal = async (file: File): Promise<string> => {
     throw new Error('Gemini API key is not configured. Please set VITE_GEMINI_API_KEY in environment variables.');
   }
 
-  // Active production models for Google API
   const modelsToTry = [
     'gemini-3.7-flash',
     'gemini-3.6-flash',
@@ -104,26 +118,79 @@ export const extractImageTextLocal = async (file: File): Promise<string> => {
 };
 
 /**
- * Client-Side PDF Text Extractor
+ * Client-Side PDF Text Extractor using Gemini AI Multimodal Vision & Clean Parser
  */
 export const extractPdfTextLocal = async (file: File): Promise<string> => {
+  const apiKey = getGeminiApiKey();
+
+  if (apiKey) {
+    const modelsToTry = ['gemini-3.7-flash', 'gemini-3.6-flash', 'gemini-3.5-flash', 'gemma-4-31b-it'];
+    const base64Data = await fileToBase64(file);
+
+    for (const modelName of modelsToTry) {
+      try {
+        const response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [
+                {
+                  parts: [
+                    {
+                      text: 'Extract and transcribe all readable text, titles, headings, and body copy from this PDF document. Do NOT output raw PDF code, stream markers, C2PA claims, or filter objects. Output ONLY clean readable text.',
+                    },
+                    {
+                      inline_data: {
+                        mime_type: 'application/pdf',
+                        data: base64Data,
+                      },
+                    },
+                  ],
+                },
+              ],
+              generationConfig: {
+                temperature: 0.0,
+              },
+            }),
+          }
+        );
+
+        if (response.ok) {
+          const json = await response.json();
+          const text = json.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (text && text.trim().length > 0) {
+            return cleanPdfExtractedText(text);
+          }
+        }
+      } catch (err) {
+        console.warn(`Direct PDF extraction with ${modelName} failed:`, err);
+      }
+    }
+  }
+
+  // Sanitized fallback decoder
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onload = async (e) => {
+    reader.onload = (e) => {
       try {
         const buffer = e.target?.result as ArrayBuffer;
         const textDecoder = new TextDecoder('utf-8');
         const raw = textDecoder.decode(buffer);
-        const matches = raw.match(/\(([^()]{3,})\)/g) || [];
+        const matches = raw.match(/\(([^()]{4,})\)/g) || [];
         const extracted = matches
           .map((m) => m.slice(1, -1))
+          .filter((t) => !/endstream|endobj|Filter|ASCII85|Flate|c2pa|jumd|cbor|xmp:|OpenAI|SSL\.com/i.test(t))
           .filter((t) => /[a-zA-Z0-9\s.,!?'"-]{4,}/.test(t))
           .join(' ');
 
-        if (extracted && extracted.length > 10) {
-          resolve(extracted);
+        const cleaned = cleanPdfExtractedText(extracted);
+
+        if (cleaned && cleaned.length > 5) {
+          resolve(cleaned);
         } else {
-          throw new Error(`Unable to extract text from PDF (${file.name}). Please ensure the PDF contains selectable text.`);
+          throw new Error(`Unable to extract readable text from PDF (${file.name}). Please ensure the PDF contains text or upload as an image/screenshot.`);
         }
       } catch (err) {
         reject(err);
